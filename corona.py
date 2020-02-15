@@ -66,40 +66,7 @@ st.markdown(f'Confirmed cases: **{all_cases}**, deads: **{all_deads}** \
     ({round(all_deads/all_cases * 100,2)}%), recovered: **{all_recovered}** \
     ({round(all_recovered/all_cases * 100,2)}%)')
 
-# countries = st.multiselect(
-#     'Wich countries',
-#      list(gr_country.index),
-#      default='UK')
 
-# filtered = df[df['country'].isin(countries)]
-
-# for country in countries:
-#     x = filtered[filtered['country'] == country]
-#     fő = int(x.confirmed.sum())
-#     st.markdown(f'*{country}*: **{fő:<5}** fő, {round(x.percent.sum(),4)} %')
-#     midpoint = (np.average(x["lon"]), np.average(x["lat"]))
-#     view_state = pdk.ViewState(
-#         longitude = midpoint[0],
-#         latitude  = midpoint[1],
-#         zoom = 5,
-#         min_zoom = 1,
-#         max_zoom = 15,
-#         pitch = 50)
-
-#     layer = pdk.Layer(
-#         'HexagonLayer',  # `type` positional argument is here
-#         data = filtered,
-#         get_position = ['lon', 'lat'],
-#         auto_highlight = True,
-#         elevation_scale = 200,
-#         radius = min(2000 * fő, 50000 + fő),
-#         elevation_range = [0, 1000],
-#         pickable = True,
-#         extruded = True,
-#         coverage = 1)
-#     st.write(pdk.Deck(layers=[layer], initial_view_state=view_state))
-
-    
 df_confirmed = []
 df_deads = []
 df_recovered = []
