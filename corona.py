@@ -23,6 +23,8 @@ def load_data(the_file):
     data['confirmed'] = data.iloc[:,-1:]
     data['state'].fillna(' ', inplace=True)
     data.fillna(0, inplace=True)
+    if 'Confirmed' in the_file:
+        st.subheader('Dataset date: ' + data.columns[-2])
     return data
 
 def create_layer(data_frame, elev_scale, radius, colors):
@@ -33,7 +35,7 @@ def create_layer(data_frame, elev_scale, radius, colors):
         auto_highlight = True,
         elevation_scale = elev_scale,
         radius = radius,
-        elevation_range = [0, 1000],
+        elevation_range = [0,1000],
         pickable = False,
         extruded = True,
         color_range = [colors for x in range(6)],
@@ -57,6 +59,15 @@ all_recovered = int(df.recovered.sum())
 st.subheader('Statistic by countries')
 gr_country = df[['country', 'confirmed', 'deads', 'recovered']].groupby(['country']).sum()
 st.write(gr_country)
+st.bar_chart(gr_country)
+
+countries = st.multiselect(
+    'Wich countries',
+     list(gr_country.index),
+     default=['Austria', 'Belgium', 'France', 'Germany', 'Italy', 'Romania'])
+
+filtered = gr_country[gr_country.index.isin(countries)]
+st.area_chart(filtered)
 
 st.subheader('Statistic by countries/states')
 gr_country_state = df[['country','state','confirmed', 'deads', 'recovered']].groupby(['country', 'state']).sum()
@@ -66,7 +77,7 @@ st.markdown(f'Confirmed cases: **{all_cases}**, deads: **{all_deads}** \
     ({round(all_deads/all_cases * 100,2)}%), recovered: **{all_recovered}** \
     ({round(all_recovered/all_cases * 100,2)}%)')
 
-
+    
 df_confirmed = []
 df_deads = []
 df_recovered = []
@@ -100,9 +111,9 @@ if st.checkbox('Show world map'):
         max_zoom = 15,
         pitch = 40.5)
 
-    layer_c = create_layer(d_c, all_cases//100, 20000, (50, 200, 50))
-    layer_d = create_layer(d_r, all_recovered//100, 24000, (50, 50, 200))
-    layer_r = create_layer(d_d, all_deads//100, 28000, (200, 50, 50))
+    layer_c = create_layer(d_c, all_cases//100, 20000, (50, 250, 50))
+    layer_d = create_layer(d_r, all_recovered//100, 24000, (50, 50, 250))
+    layer_r = create_layer(d_d, all_deads//100, 28000, (250, 50, 50))
     r = pdk.Deck(layers = [layer_c, layer_r, layer_d], initial_view_state = view_state)
     st.markdown('Green: **CONFIRMED** Blue: **RECOVERED** Red: **DIED**')
     st.write(r)
